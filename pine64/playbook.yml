@@ -74,6 +74,14 @@
       become: yes
       notify: reboot
 
+    - name: Update cron-apt config
+      copy:
+        src: files/etc/cron-apt/config
+        dest: /etc/cron-apt/config
+        owner: root
+        group: root
+      become: yes
+
     - name: Change shell to ZSH
       command: chsh pine64 -s /bin/zsh
       become: yes
@@ -131,3 +139,4 @@
       async: 0
       poll: 0
       ignore_errors: true
+      become: yes
