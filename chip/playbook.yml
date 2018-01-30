@@ -1,0 +1,154 @@
+- hosts: chip
+  remote_user: chip
+  become_method: sudo
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python
+    distro: jessie
+    locale: en_US.UTF-8
+    timezone: America/New_York
+    node_version: node_9.x
+    ruby_version: 2.5.0
+    packages_to_install: [
+      autoconf, bison, build-essential, cron-apt, firmware-realtek,  git, htop,
+      less, libffi-dev, libgdbm-dev, libgdbm3, libncurses5-dev, libreadline-dev,
+      libssl-dev, libyaml-dev, locales, man-db, nano, nmap, nodejs, rfkill, screen,
+      zlib1g-dev, zsh
+    ]
+
+  tasks:
+    - name: Install apt-transport-https package
+      apt:
+        name: apt-transport-https
+        force: yes
+      become: yes
+
+    - name: Update and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoclean: yes
+        autoremove: yes
+      become: yes
+
+    - name: Add NodeSource apt key
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+      become: yes
+
+    - name: Add NodeSource apt repository
+      apt_repository:
+        repo: "{{ item }}"
+        state: present
+        filename: nodesource
+      with_items:
+        - deb https://deb.nodesource.com/{{ node_version }} {{ distro }} main
+        - deb-src https://deb.nodesource.com/{{ node_version }} {{ distro }} main
+      become: yes
+
+    - name: Add V10lator apt key
+      apt_key:
+        url: https://chiprepo.home.v10lator.de/v10chiprepo.gpg.key
+        state: present
+      become: yes
+
+    - name: Add V10lator apt repository
+      apt_repository:
+        repo: deb https://chiprepo.home.v10lator.de/packages {{ distro }} main
+        state: present
+        filename: v10lator
+      become: yes
+
+    - name: Configure locales and timezone
+      shell: |
+        sed -i -e 's/# {{ locale }} UTF-8/{{ locale }} UTF-8/' /etc/locale.gen
+        dpkg-reconfigure -f noninteractive locales
+        echo "{{ timezone }}" > /etc/timezone
+        dpkg-reconfigure -f noninteractive tzdata
+      become: yes
+
+    - name: Update SSH config
+      copy:
+        src: files/etc/ssh/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        backup: yes
+      become: yes
+      notify: restart ssh
+
+    - name: Install packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      with_items: "{{ packages_to_install }}"
+      become: yes
+
+    - name: Update cron-apt config
+      copy:
+        src: files/etc/cron-apt/config
+        dest: /etc/cron-apt/config
+        owner: root
+        group: root
+      become: yes
+
+    - name: Change shell to ZSH
+      command: chsh chip -s /bin/zsh
+      become: yes
+
+    - name: Install oh-my-zsh
+      shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+    - name: Copy dotfiles
+      copy:
+        src: files/home/{{ item }}
+        dest: ~/{{ item }}
+      with_items:
+        - .oh-my-zsh/custom/aliases.zsh
+        - .oh-my-zsh/custom/bundler.zsh
+        - .oh-my-zsh/custom/jgarber.zsh-theme
+        - .gemrc
+        - .gitconfig
+        - .npmrc
+        - .zshrc
+
+    - name: Remove Bash files
+      file:
+        name: ~/{{ item }}
+        state: absent
+      with_items:
+        - .bash_history
+        - .bash_logout
+        - .bashrc
+        - .profile
+
+    - name: Install rbenv and ruby-build
+      shell: |
+        if [ ! -d ~/.rbenv ]; then
+          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+        fi
+
+        if [ ! -d ~/.rbenv/plugins ]; then
+          mkdir -p ~/.rbenv/plugins
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+        fi
+
+    - name: Install Ruby {{ ruby_version }}
+      shell: |
+        ~/.rbenv/bin/rbenv install {{ ruby_version }}
+        ~/.rbenv/bin/rbenv global {{ ruby_version }}
+
+  handlers:
+    - name: restart ssh
+      service:
+        name: ssh
+        state: restarted
+      become: yes
+    - name: reboot
+      command: shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: true
+      become: yes
