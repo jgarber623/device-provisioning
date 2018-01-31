@@ -17,6 +17,14 @@
     ]
 
   tasks:
+    - name: Install apt-transport-https package
+      apt:
+        name: apt-transport-https
+        state: latest
+        update_cache: yes
+        force: yes
+      become: yes
+
     - name: Update and upgrade packages
       apt:
         update_cache: yes
@@ -87,7 +95,9 @@
       become: yes
 
     - name: Install oh-my-zsh
-      shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+      shell: |
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+        exit 0
 
     - name: Copy dotfiles
       copy:
