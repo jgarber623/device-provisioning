@@ -40,6 +40,14 @@ Copy the appropriate public key over to the CHIP:
 ssh-copy-id -i ~/.ssh/id_rsa_chip.pub chip@<ip-address>
 ```
 
+SSH to CHIP, update/upgrade everything, and install Python:
+
+```sh
+sudo apt update
+sudo apt dist-upgrade
+sudo apt install python
+```
+
 Run the Ansible playbook to provision the CHIP:
 
 ```sh

@@ -20,15 +20,9 @@
     - name: Install apt-transport-https package
       apt:
         name: apt-transport-https
-        force: yes
-      become: yes
-
-    - name: Update and upgrade packages
-      apt:
+        state: latest
         update_cache: yes
-        upgrade: dist
-        autoclean: yes
-        autoremove: yes
+        force: yes
       become: yes
 
     - name: Add NodeSource apt key
@@ -45,19 +39,6 @@
       with_items:
         - deb https://deb.nodesource.com/{{ node_version }} {{ distro }} main
         - deb-src https://deb.nodesource.com/{{ node_version }} {{ distro }} main
-      become: yes
-
-    - name: Add V10lator apt key
-      apt_key:
-        url: https://chiprepo.home.v10lator.de/v10chiprepo.gpg.key
-        state: present
-      become: yes
-
-    - name: Add V10lator apt repository
-      apt_repository:
-        repo: deb https://chiprepo.home.v10lator.de/packages {{ distro }} main
-        state: present
-        filename: v10lator
       become: yes
 
     - name: Configure locales and timezone
@@ -99,7 +80,9 @@
       become: yes
 
     - name: Install oh-my-zsh
-      shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+      shell: |
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+        exit 0
 
     - name: Copy dotfiles
       copy:
