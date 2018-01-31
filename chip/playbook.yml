@@ -10,10 +10,10 @@
     node_version: node_9.x
     ruby_version: 2.5.0
     packages_to_install: [
-      autoconf, bison, build-essential, cron-apt, firmware-realtek,  git, htop,
-      less, libffi-dev, libgdbm-dev, libgdbm3, libncurses5-dev, libreadline-dev,
-      libssl-dev, libyaml-dev, locales, man-db, nano, nmap, nodejs, rfkill, screen,
-      zlib1g-dev, zsh
+      autoconf, bison, build-essential, cron-apt, dosfstools, firmware-realtek,
+      git, htop, less, libffi-dev, libgdbm-dev, libgdbm3, libncurses5-dev,
+      libreadline-dev, libssl-dev, libyaml-dev, locales, man-db, nano, nmap, nodejs,
+      rfkill, screen, zlib1g-dev, zsh
     ]
 
   tasks:
