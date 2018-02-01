@@ -59,7 +59,7 @@ ZSH_CUSTOM=$ZSH/custom
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  bundler gem git nmap node npm rails rake rbenv screen
+  bundler gem git nmap node npm nvm rails rake rbenv screen
 )
 
 source $ZSH/oh-my-zsh.sh

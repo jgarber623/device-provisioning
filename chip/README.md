@@ -1,16 +1,16 @@
 # CHIP Provisioning Playbook
 
-This playbook will provision a [CHIP](https://getchip.com) for use as a headless local network server.
+This playbook will provision a [CHIP](https://getchip.com) for use as a headless server.
 
 ## Prerequisites
 
 - [Ansible](https://www.ansible.com) (`brew install ansible`)
 - A CHIP
-- An SD card (at least 8GB)
+- A USB cable
 
 ## Provisioning
 
-Use the [CHIP Flasher](http://flash.getchip.com) to install the latest headless Debian image to the CHIP Following the [Control CHIP Using a Serial Terminal](https://docs.getchip.com/chip.html#control-chip-using-a-serial-terminal) instructions, connect to CHIP and configure WiFi:
+Use the [CHIP Flasher](http://flash.getchip.com) to install the latest headless Debian image to the CHIP. Following the [Control CHIP Using a Serial Terminal](https://docs.getchip.com/chip.html#control-chip-using-a-serial-terminal) instructions, connect to CHIP and configure WiFi:
 
 ```sh
 # Connect to CHIP
@@ -40,7 +40,7 @@ Copy the appropriate public key over to the CHIP:
 ssh-copy-id -i ~/.ssh/id_rsa_chip.pub chip@<ip-address>
 ```
 
-SSH to CHIP, update/upgrade everything, and install Python:
+SSH to the CHIP, update/upgrade everything, and install Python (an Ansible dependency):
 
 ```sh
 sudo apt update
@@ -51,5 +51,18 @@ sudo apt install python
 Run the Ansible playbook to provision the CHIP:
 
 ```sh
-ansible-playbook --ask-become-pass --verbose --inventory hosts playbook.yml
+ansible-playbook -K -v -i hosts playbook.yml
+```
+
+## Auto-Mounting a USB Device
+
+```sh
+sudo mkdir -p <mount-path> # (e.g. `/media/foo`)
+sudo mount /dev/sda1 <mount-path>
+```
+
+Update `/etc/fstab` using the device's UUID (`sudo blkid /dev/sda1`):
+
+```
+UUID=<device-uuid>    <mount-path>    hfsplus    defaults,nofail    0    0
 ```

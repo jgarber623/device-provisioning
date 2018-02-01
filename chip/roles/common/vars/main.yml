@@ -1,0 +1,34 @@
+ansible_python_interpreter: /usr/bin/python
+distro: jessie
+locale: en_US.UTF-8
+timezone: America/New_York
+
+nvm_path: ~/.nvm
+nvm_version: v0.33.8
+
+rbenv_path: ~/.rbenv
+ruby_version: 2.5.0
+
+packages_to_install:
+  - autoconf
+  - bison
+  - build-essential
+  - cron-apt
+  - dosfstools
+  - firmware-realtek
+  - git
+  - hfsplus
+  - hfsprogs
+  - hfsutils
+  - libffi-dev
+  - libgdbm-dev
+  - libncurses5-dev
+  - libreadline-dev
+  - libssl-dev
+  - libyaml-dev
+  - nginx-extras
+  - nmap
+  - rfkill
+  - screen
+  - zlib1g-dev
+  - zsh
