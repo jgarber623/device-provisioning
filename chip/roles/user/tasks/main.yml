@@ -1,0 +1,37 @@
+- name: Change shell to ZSH
+  shell: |
+    if [ $SHELL != '/bin/zsh' ]; then
+      chsh chip -s /bin/zsh
+      exit 0
+    fi
+  become: yes
+
+- name: Install oh-my-zsh
+  shell: |
+    if [ ! -d {{ zsh_path }} ]; then
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+      exit 0
+    fi
+
+- name: Copy dotfiles
+  copy:
+    src: "{{ item | regex_replace('^~/', 'files/home/') }}"
+    dest: "{{ item }}"
+  with_items:
+    - "{{ zsh_custom_path }}/aliases.zsh"
+    - "{{ zsh_custom_path }}/bundler.zsh"
+    - "{{ zsh_custom_path }}/jgarber.zsh-theme"
+    - ~/.gemrc
+    - ~/.gitconfig
+    - ~/.npmrc
+    - ~/.zshrc
+
+- name: Remove Bash files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - ~/.bash_history
+    - ~/.bash_logout
+    - ~/.bashrc
+    - ~/.profile

@@ -1,0 +1,2 @@
+zsh_path: ~/.oh-my-zsh
+zsh_custom_path: "{{ zsh_path }}/custom"

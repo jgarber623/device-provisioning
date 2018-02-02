@@ -11,53 +11,6 @@
   command: loginctl enable-linger chip
   become: yes
 
-- name: Install locales package
-  apt:
-    name: locales
-    state: latest
-    update_cache: yes
-  become: yes
-
-- name: Set locale in /etc/locale.gen
-  lineinfile:
-    path: /etc/locale.gen
-    regexp: '^# ({{ locale }} UTF-8)'
-    line: '\1'
-    backrefs: yes
-  become: yes
-
-- name: Set locale in /etc/default/locale
-  lineinfile:
-    path: /etc/default/locale
-    regexp: '^(LANG="{{ locale }}")'
-    line: '\1'
-    backrefs: yes
-  become: yes
-
-- name: Reconfigure locales
-  command: dpkg-reconfigure -f noninteractive locales
-  become: yes
-
-- name: Set timezone in /etc/timezone
-  lineinfile:
-    path: /etc/timezone
-    regexp: '^({{ timezone }})'
-    line: '\1'
-    backrefs: yes
-  become: yes
-
-- name: Reconfigure timezones
-  command: dpkg-reconfigure -f noninteractive tzdata
-  become: yes
-
-- name: Install packages
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items: "{{ packages_to_install }}"
-  become: yes
-
 - name: Update SSH config
   lineinfile:
     path: /etc/ssh/sshd_config
@@ -74,55 +27,17 @@
   notify:
     - restart ssh
 
-- name: Change shell to ZSH
-  command: chsh chip -s /bin/zsh
+- import_tasks: locales.yml
   become: yes
 
-- name: Install oh-my-zsh
-  shell: |
-    if [ ! -d ~/.oh-my-zsh ]; then
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-      exit 0
-    fi
+- import_tasks: timezone.yml
+  become: yes
 
-- name: Copy dotfiles
-  copy:
-    src: files/home/{{ item }}
-    dest: ~/{{ item }}
-  with_items:
-    - .oh-my-zsh/custom/aliases.zsh
-    - .oh-my-zsh/custom/bundler.zsh
-    - .oh-my-zsh/custom/jgarber.zsh-theme
-    - .gemrc
-    - .gitconfig
-    - .npmrc
-    - .zshrc
-
-- name: Remove Bash files
-  file:
-    name: ~/{{ item }}
-    state: absent
-  with_items:
-    - .bash_history
-    - .bash_logout
-    - .bashrc
-    - .profile
-
-- name: Install rbenv
-  shell: |
-    if [ ! -d {{ rbenv_path }} ]; then
-      git clone https://github.com/rbenv/rbenv.git {{ rbenv_path }}
-    fi
-
-- name: Install ruby-build
-  shell: |
-    if [ ! -d {{ rbenv_path }}/plugins ]; then
-      mkdir -p {{ rbenv_path }}/plugins
-      git clone https://github.com/rbenv/ruby-build.git {{ rbenv_path }}/plugins/ruby-build
-    fi
-
-- name: Install nvm
-  shell: |
-    if [ ! -d ~/.nvm ]; then
-      git clone -b {{ nvm_version }} https://github.com/creationix/nvm.git {{ nvm_path }}
-    fi
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_time }}"
+  with_items: "{{ packages_to_install }}"
+  become: yes

@@ -51,7 +51,7 @@ sudo apt install python
 Run the Ansible playbook to provision the CHIP:
 
 ```sh
-ansible-playbook -K -v -i hosts playbook.yml
+ansible-playbook -K -v playbook.yml
 ```
 
 ## Auto-Mounting a USB Device

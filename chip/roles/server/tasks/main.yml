@@ -1,0 +1,24 @@
+- name: Install/update rbenv
+  git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: "{{ rbenv_path }}"
+    clone: yes
+    update: yes
+
+- name: Make rbenv plugins folder
+  file:
+    path: "{{ rbenv_path }}/plugins"
+    state: directory
+
+- name: Install/update ruby-build
+  git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: "{{ rbenv_path }}/plugins/ruby-build"
+    clone: yes
+    update: yes
+
+- name: Install/update nvm
+  git:
+    repo: https://github.com/creationix/nvm.git
+    dest: "{{ nvm_path }}"
+    version: "{{ nvm_version }}"
