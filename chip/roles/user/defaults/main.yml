@@ -1,5 +1,14 @@
-user: chip
+files_to_copy:
+  - .oh-my-zsh/custom/
+  - .gitconfig
+  - .zshrc
 
-packages_to_install:
+files_to_remove:
+  - .bash_history
+  - .bash_logout
+  - .bashrc
+  - .profile
+
+dependencies:
   - git
   - zsh

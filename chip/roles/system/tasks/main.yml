@@ -16,13 +16,7 @@
     path: /etc/ssh/sshd_config
     regexp: '{{ item.regexp }}'
     line: '{{ item.line }}'
-  with_items:
-    - regexp: '^#?PermitRootLogin'
-      line: 'PermitRootLogin no'
-    - regexp: '^#?PasswordAuthentication'
-      line: 'PasswordAuthentication no'
-    - regexp: '^#?UsePAM'
-      line: 'UsePAM no'
+  with_items: "{{ sshd_config }}"
   become: yes
   notify:
     - restart ssh

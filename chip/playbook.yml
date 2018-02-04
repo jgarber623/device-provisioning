@@ -1,3 +1,5 @@
+- name: "CHIP Playbook"
+
 - import_playbook: system.yml
 - import_playbook: user.yml
 - import_playbook: node.yml

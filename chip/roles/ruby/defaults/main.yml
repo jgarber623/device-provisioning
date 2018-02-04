@@ -1,0 +1,26 @@
+rbenv:
+  path: "{{ ansible_user_dir }}/.rbenv"
+  repo: https://github.com/rbenv/rbenv.git
+  plugins:
+    - name: ruby-build
+      repo: https://github.com/rbenv/ruby-build.git
+
+ruby:
+  version: 2.5.0
+
+files_to_copy:
+  - .gemrc
+
+dependencies:
+  - autoconf
+  - bison
+  - build-essential
+  - git
+  - libffi-dev
+  - libgdbm-dev
+  - libgdbm3
+  - libncurses5-dev
+  - libreadline6-dev
+  - libssl-dev
+  - libyaml-dev
+  - zlib1g-dev

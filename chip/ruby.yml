@@ -1,7 +1,7 @@
-- name: "CHIP: User Playbook"
+- name: "CHIP: Ruby Playbook"
   hosts: chip
   remote_user: chip
   become_method: sudo
 
   roles:
-    - user
+    - ruby

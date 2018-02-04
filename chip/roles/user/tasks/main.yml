@@ -3,37 +3,28 @@
     name: common
 
 - name: Enable user lingering
-  command: loginctl enable-linger {{ user }}
+  command: loginctl enable-linger {{ ansible_user }}
   become: yes
+  changed_when: false
 
 - name: Change shell to ZSH
-  command: chsh {{ user }} -s /bin/zsh
-  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    shell: /bin/zsh
 
 - name: Install oh-my-zsh
-  shell: |
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-    exit 0
-  register: oh_my_zsh_installed
-  changed_when: '"You already have Oh My Zsh installed." not in oh_my_zsh_installed.stdout'
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
+    dest: "{{ ansible_user_dir }}/.oh-my-zsh"
 
-- name: Copy user configuration files
+- name: Copy configuration files
   copy:
-    src: files/home/{{ item }}
-    dest: $HOME/{{ item }}
-  with_items:
-    - .oh-my-zsh/custom/
-    - .gemrc
-    - .gitconfig
-    - .npmrc
-    - .zshrc
+    src: files/{{ item }}
+    dest: "{{ ansible_user_dir }}/{{ item }}"
+  with_items: "{{ files_to_copy }}"
 
 - name: Remove Bash files
   file:
-    path: $HOME/{{ item }}
+    path: "{{ ansible_user_dir }}/{{ item }}"
     state: absent
-  with_items:
-    - .bash_history
-    - .bash_logout
-    - .bashrc
-    - .profile
+  with_items: "{{ files_to_remove }}"

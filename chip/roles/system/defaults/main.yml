@@ -1,4 +1,12 @@
-packages_to_install:
+sshd_config:
+  - regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  - regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  - regexp: '^#?UsePAM'
+    line: 'UsePAM no'
+
+dependencies:
   - cron-apt
   - dosfstools
   - hfsplus
