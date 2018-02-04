@@ -1,9 +1,0 @@
-- name: Set timezone in /etc/timezone
-  lineinfile:
-    path: /etc/timezone
-    regexp: '^({{ timezone }})$'
-    line: '\1'
-    backrefs: yes
-
-- name: Reconfigure timezones
-  command: dpkg-reconfigure -f noninteractive tzdata

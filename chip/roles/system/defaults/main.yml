@@ -1,0 +1,9 @@
+packages_to_install:
+  - cron-apt
+  - dosfstools
+  - hfsplus
+  - hfsprogs
+  - hfsutils
+  - nmap
+  - rfkill
+  - tmux

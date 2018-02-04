@@ -1,0 +1,5 @@
+nvm_path: $HOME/.nvm
+nvm_version: v0.33.8
+
+packages_to_install:
+  - git

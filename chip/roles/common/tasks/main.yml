@@ -1,43 +1,8 @@
-- name: Disable WiFi power management
-  get_url:
-    url: http://fordsfords.github.io/wlan_pwr/wlan_pwr
-    dest: /etc/network/if-up.d/wlan-power-save
-    mode: +x
-  become: yes
-  notify:
-    - reboot
-
-- name: Enable user lingering
-  command: loginctl enable-linger chip
-  become: yes
-
-- name: Update SSH config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '{{ item.regexp }}'
-    line: '{{ item.line }}'
-  with_items:
-    - regexp: '^#?PermitRootLogin'
-      line: 'PermitRootLogin no'
-    - regexp: '^#?PasswordAuthentication'
-      line: 'PasswordAuthentication no'
-    - regexp: '^#?UsePAM'
-      line: 'UsePAM no'
-  become: yes
-  notify:
-    - restart ssh
-
-- import_tasks: locales.yml
-  become: yes
-
-- import_tasks: timezone.yml
-  become: yes
-
 - name: Install packages
   apt:
     name: "{{ item }}"
     state: latest
     update_cache: yes
-    cache_valid_time: "{{ apt_cache_time }}"
+    cache_valid_time: 3600
   with_items: "{{ packages_to_install }}"
   become: yes

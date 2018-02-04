@@ -1,0 +1,28 @@
+- name: Install packages
+  import_role:
+    name: common
+
+- name: Disable WiFi power management
+  get_url:
+    url: http://fordsfords.github.io/wlan_pwr/wlan_pwr
+    dest: /etc/network/if-up.d/wlan-power-save
+    mode: +x
+  become: yes
+  notify:
+    - reboot
+
+- name: Update SSH config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+    - regexp: '^#?PermitRootLogin'
+      line: 'PermitRootLogin no'
+    - regexp: '^#?PasswordAuthentication'
+      line: 'PasswordAuthentication no'
+    - regexp: '^#?UsePAM'
+      line: 'UsePAM no'
+  become: yes
+  notify:
+    - restart ssh
