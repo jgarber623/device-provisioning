@@ -98,10 +98,9 @@ tmux
 sudo apt dist-upgrade
 ```
 
-Before rebooting, update WiFi settings to use WPA Supplicant instead of Network Manager.
+Before rebooting, update WiFi settings to use [wpa_supplicant](https://w1.fi/wpa_supplicant/) instead of [nmcli](https://developer.gnome.org/NetworkManager/unstable/nmcli.html).
 
 ```sh
-# Delete nmcli's connection information
 sudo nmcli connection delete id '<SSID>'
 ```
 
@@ -114,9 +113,8 @@ iface lo inet loopback
 iface eth0 inet dhcp
 
 allow-hotplug wlan0
-auto wlan0
-
 iface wlan0 inet dhcp
+
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
@@ -130,6 +128,16 @@ network={
     ssid="<SSID>"
     psk="<password>"
 }
+```
+
+Fix `/etc/wpa_supplicant/functions.sh` by changing:
+
+```diff
+- TO_NULL="/dev/stdout"
++ TO_NULL="&1"
+
+- echo "$WPA_SUP_PNAME: $@" >/dev/stderr
++ echo "$WPA_SUP_PNAME: $@" >&2
 ```
 
 Restart CHIP with `sudo reboot`.
