@@ -11,6 +11,7 @@
   user:
     name: "{{ ansible_user }}"
     shell: /bin/zsh
+  become: yes
 
 - name: Install oh-my-zsh
   git:
