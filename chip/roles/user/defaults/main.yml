@@ -1,6 +1,7 @@
 files_to_copy:
   - .oh-my-zsh/custom/
   - .gitconfig
+  - .tmux.conf
   - .zshrc
 
 files_to_remove:
