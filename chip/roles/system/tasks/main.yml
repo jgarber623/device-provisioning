@@ -2,6 +2,16 @@
   import_role:
     name: common
 
+- name: Disable services
+  service:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  with_items: "{{ disabled_services }}"
+  become: yes
+  notify:
+    - reboot
+
 - name: Disable WiFi power management
   get_url:
     url: http://fordsfords.github.io/wlan_pwr/wlan_pwr

@@ -6,6 +6,13 @@ sshd_config:
   - regexp: '^#?UsePAM'
     line: 'UsePAM no'
 
+disabled_services:
+  - avahi-daemon
+  - avahi-daemon.socket
+  - bluetooth
+  - ModemManager
+  - NetworkManager
+
 dependencies:
   - cron-apt
   - dosfstools
