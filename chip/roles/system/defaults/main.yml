@@ -1,18 +1,3 @@
-sshd_config:
-  - regexp: '^#?PermitRootLogin'
-    line: 'PermitRootLogin no'
-  - regexp: '^#?PasswordAuthentication'
-    line: 'PasswordAuthentication no'
-  - regexp: '^#?UsePAM'
-    line: 'UsePAM no'
-
-disabled_services:
-  - avahi-daemon
-  - avahi-daemon.socket
-  - bluetooth
-  - ModemManager
-  - NetworkManager
-
 dependencies:
   - cron-apt
   - dosfstools
@@ -21,3 +6,19 @@ dependencies:
   - hfsutils
   - nmap
   - rfkill
+
+services:
+  disabled:
+    - avahi-daemon
+    - avahi-daemon.socket
+    - bluetooth
+    - ModemManager
+    - NetworkManager
+
+sshd_config:
+  - regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  - regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  - regexp: '^#?UsePAM'
+    line: 'UsePAM no'

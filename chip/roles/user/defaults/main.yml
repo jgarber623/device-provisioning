@@ -1,15 +1,15 @@
-files_to_copy:
-  - .oh-my-zsh/custom/
-  - .gitconfig
-  - .tmux.conf
-  - .zshrc
-
-files_to_remove:
-  - .bash_history
-  - .bash_logout
-  - .bashrc
-  - .profile
-
 dependencies:
   - git
   - zsh
+
+files:
+  copy:
+    - .oh-my-zsh/custom/
+    - .gitconfig
+    - .tmux.conf
+    - .zshrc
+  remove:
+    - .bash_history
+    - .bash_logout
+    - .bashrc
+    - .profile

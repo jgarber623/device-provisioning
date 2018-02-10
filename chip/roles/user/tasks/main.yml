@@ -22,10 +22,10 @@
   copy:
     src: files/{{ item }}
     dest: "{{ ansible_user_dir }}/{{ item }}"
-  with_items: "{{ files_to_copy }}"
+  with_items: "{{ files.copy }}"
 
 - name: Remove Bash files
   file:
     path: "{{ ansible_user_dir }}/{{ item }}"
     state: absent
-  with_items: "{{ files_to_remove }}"
+  with_items: "{{ files.remove }}"
