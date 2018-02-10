@@ -6,7 +6,7 @@
   copy:
     src: files/{{ item }}
     dest: "{{ ansible_user_dir }}/{{ item }}"
-  with_items: "{{ files.copy }}"
+  with_items: "{{ files_to_copy }}"
 
 - name: Install/update rbenv
   git:

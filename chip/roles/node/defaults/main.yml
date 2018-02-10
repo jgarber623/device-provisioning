@@ -8,6 +8,5 @@ nvm:
 node:
   version: v9.5.0
 
-files:
-  copy:
-    - .npmrc
+files_to_copy:
+  - .npmrc
