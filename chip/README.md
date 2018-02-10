@@ -12,6 +12,7 @@ This playbook will provision a [CHIP](https://getchip.com) for use as a headless
 	- [Provision with Ansible](#provision-with-ansible)
 - [Bonus Knowledge](#bonus-knowledge)
 	- [Auto-Mount a USB Device](#auto-mount-a-usb-device)
+	- [Pre-Installed Packages](#pre-installed-packages)
 
 ## Provisioning CHIP
 
@@ -145,3 +146,7 @@ Update `/etc/fstab` using the device's UUID (`sudo blkid /dev/sda1`):
 ```
 UUID=<device-uuid>    <mount-path>    hfsplus    defaults,nofail    0    0
 ```
+
+### Pre-Installed Packages
+
+The official headless Debian image comes with a bunch of included packages. I've saved [a Gist of pre-installed packages and versions](https://gist.github.com/jgarber623/84063dd0548be832965550184fdf6534).
