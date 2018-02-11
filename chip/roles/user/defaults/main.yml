@@ -1,5 +1,6 @@
 dependencies:
   - git
+  - tmux
   - zsh
 
 files_to_copy:
