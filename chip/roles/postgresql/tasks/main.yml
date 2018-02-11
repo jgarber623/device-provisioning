@@ -1,3 +1,23 @@
 - name: Install packages
   import_role:
     name: common
+
+- name: Create PostgreSQL role
+  postgresql_user:
+    name: "{{ ansible_user }}"
+    role_attr_flags: CREATEDB,NOSUPERUSER
+  become: yes
+  become_user: "{{ postgresql.user }}"
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Copy configuration files
+  copy:
+    src: files/{{ item }}
+    dest: "{{ postgresql.config_dir }}/{{ item }}"
+    owner: "{{ postgresql.user }}"
+    group: "{{ postgresql.user }}"
+  with_items: "{{ files_to_copy }}"
+  become: yes
+  notify:
+    - restart postgresql
