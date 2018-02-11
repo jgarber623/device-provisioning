@@ -1,0 +1,22 @@
+dependencies:
+  - bluetooth
+  - cron-apt
+  - firmware-realtek
+  - hfsplus
+  - hfsprogs
+  - hfsutils
+  - less
+  - libpam-systemd
+  - nmap
+
+services_to_disable:
+  - avahi-daemon
+  - avahi-daemon.socket
+
+sshd_config:
+  - regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  - regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  - regexp: '^#?UsePAM'
+    line: 'UsePAM no'

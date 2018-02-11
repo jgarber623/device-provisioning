@@ -1,0 +1,20 @@
+- name: Install packages
+  import_role:
+    name: common
+
+- name: Copy configuration files
+  copy:
+    src: files/{{ item }}
+    dest: "{{ ansible_user_dir }}/{{ item }}"
+  with_items: "{{ files_to_copy }}"
+
+- name: Install/update nvm
+  git:
+    repo: https://github.com/creationix/nvm.git
+    dest: "{{ nvm.path }}"
+    version: "{{ nvm.version }}"
+
+- name: Install Node {{ node.version }}
+  shell: "{{ ansible_env.SHELL }} -lc '. {{ nvm.path }}/nvm.sh && nvm install {{ node.version }}'"
+  register: install_node_result
+  changed_when: '"already installed." not in install_node_result.stderr'
