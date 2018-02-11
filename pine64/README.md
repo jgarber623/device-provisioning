@@ -121,23 +121,12 @@ You should now see a list of devices with their device addresses. To pair with a
 curl -sSL https://install.pi-hole.net | bash
 ```
 
-You may consider adding [hoshsadiq's addblock-nocoin-list](https://github.com/hoshsadiq/adblock-nocoin-list) to Pi-hole's default set of blocklists.
+There's a Pi-hole playbook with some useful tasks that can be run with:
 
 ```sh
-# Append the NoCoin Filter List to Pi-hole's adlists file
-sudo tee -a /etc/pihole/adlists.list > /dev/null <<EOT
-##NoCoin Filter List
-https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt
-EOT
-
-# Update gravity
-pihole -g
+ansible-playbook -K -v pihole.yml
 ```
 
-Change the temperature to Fahrenheit:
-
-```sh
-pihole -a -f
-```
+These tasks will add [hoshsadiq's addblock-nocoin-list](https://github.com/hoshsadiq/adblock-nocoin-list) to Pi-hole's blocklists, update Gravity, and change the temperature displays to use Fahrenheit.
 
 Swap your router's DNS configuration to point to the Pine64's IP address (v4 and v6 if you want) and you should be all set!

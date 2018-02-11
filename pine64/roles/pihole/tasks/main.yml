@@ -1,0 +1,24 @@
+- name: Add blocklist URLs
+  lineinfile:
+    path: /etc/pihole/adlists.list
+    line: '{{ item.url }}'
+  with_items: "{{ blocklists }}"
+  become: yes
+
+- name: Add blocklist comments
+  lineinfile:
+    path: /etc/pihole/adlists.list
+    insertbefore: '^{{ item.url }}'
+    line: '{{ item.comment }}'
+  with_items: "{{ blocklists }}"
+  become: yes
+
+- name: Update Pi-hole's gravity
+  command: pihole -g
+  become: yes
+  changed_when: false
+
+- name: Display temperature in Fahrenheit
+  command: pihole -a -f
+  become: yes
+  changed_when: false
