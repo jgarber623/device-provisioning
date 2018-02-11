@@ -1,4 +1,8 @@
 - name: "CHIP Playbook"
+  hosts: chip
+  remote_user: chip
+  become_method: sudo
+  gather_facts: false
 
 - import_playbook: system.yml
 - import_playbook: user.yml

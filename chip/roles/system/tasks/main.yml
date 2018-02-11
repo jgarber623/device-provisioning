@@ -7,7 +7,7 @@
     name: "{{ item }}"
     enabled: no
     state: stopped
-  with_items: "{{ services.disabled }}"
+  with_items: "{{ services_to_disable }}"
   become: yes
   notify:
     - reboot

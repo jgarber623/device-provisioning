@@ -7,14 +7,13 @@ dependencies:
   - nmap
   - rfkill
 
-services:
-  disabled:
-    - avahi-daemon
-    - avahi-daemon.socket
-    - bluetooth
-    - ModemManager
-    - NetworkManager
-    - NetworkManager-wait-online
+services_to_disable:
+  - avahi-daemon
+  - avahi-daemon.socket
+  - bluetooth
+  - ModemManager
+  - NetworkManager
+  - NetworkManager-wait-online
 
 sshd_config:
   - regexp: '^#?PermitRootLogin'
