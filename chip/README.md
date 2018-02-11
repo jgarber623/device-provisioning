@@ -113,7 +113,7 @@ sudo apt update
 sudo apt dist-upgrade
 ```
 
-Restart CHIP with `sudo reboot`.
+Restart CHIP with `sudo shutdown -r now`.
 
 After the restart, make sure everything's starting up properly. You might also want to run `sudo apt autoremove` to clean up outdated packages.
 
