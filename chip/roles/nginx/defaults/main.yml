@@ -3,7 +3,6 @@ dependencies:
 
 nginx:
   config_dir: /etc/nginx
-  sites_dir: /var/www
 
 files_to_copy:
   - conf.d/
