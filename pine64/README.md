@@ -11,6 +11,7 @@ This playbook will provision a [Pine64](https://www.pine64.org) for use as a hea
 	- [Provision with Ansible](#provision-with-ansible)
 - [Bonus Knowledge](#bonus-knowledge)
 	- [Working with Bluetooth](#working-with-bluetooth)
+	- [Installing and Configuring Pi-hole](#installing-and-configuring-pi-hole)
 
 ## Provisioning Pine64
 
@@ -111,3 +112,32 @@ You should now see a list of devices with their device addresses. To pair with a
 ```sh
 [bluetooth] pair <bluetooth-device-address>
 ```
+
+### Installing and Configuring Pi-hole
+
+[Pi-hole](https://github.com/pi-hole/pi-hole)'s interactive installer doesn't play nicely with Ansible, so these steps are probably best done manually. After connecting to the Pine64, run the following to begin installation:
+
+```sh
+curl -sSL https://install.pi-hole.net | bash
+```
+
+You may consider adding [hoshsadiq's addblock-nocoin-list](https://github.com/hoshsadiq/adblock-nocoin-list) to Pi-hole's default set of blocklists.
+
+```sh
+# Append the NoCoin Filter List to Pi-hole's adlists file
+sudo tee -a /etc/pihole/adlists.list > /dev/null <<EOT
+##NoCoin Filter List
+https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt
+EOT
+
+# Update gravity
+pihole -g
+```
+
+Change the temperature to Fahrenheit:
+
+```sh
+pihole -a -f
+```
+
+Swap your router's DNS configuration to point to the Pine64's IP address (v4 and v6 if you want) and you should be all set!
