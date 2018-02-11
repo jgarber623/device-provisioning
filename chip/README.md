@@ -126,7 +126,7 @@ sudo apt update
 sudo apt install python
 ```
 
-Run the Ansible playbook to provision the CHIP:
+Run the main Ansible playbook to provision the CHIP:
 
 ```sh
 ansible-playbook -K -v playbook.yml # or run individual playbooks
