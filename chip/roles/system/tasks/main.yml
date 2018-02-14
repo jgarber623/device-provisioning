@@ -26,6 +26,7 @@
     path: /etc/ssh/sshd_config
     regexp: '{{ item.regexp }}'
     line: '{{ item.line }}'
+    backrefs: yes
   with_items: "{{ sshd_config }}"
   become: yes
   notify:
