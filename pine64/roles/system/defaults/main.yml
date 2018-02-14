@@ -14,9 +14,13 @@ services_to_disable:
   - avahi-daemon.socket
 
 sshd_config:
-  - regexp: '^#?PermitRootLogin'
-    line: 'PermitRootLogin no'
-  - regexp: '^#?PasswordAuthentication'
-    line: 'PasswordAuthentication no'
-  - regexp: '^#?UsePAM'
-    line: 'UsePAM no'
+  - regexp: '^#?(PasswordAuthentication)'
+    line: '\1 no'
+  - regexp: '^#?(PermitRootLogin)'
+    line: '\1 no'
+  - regexp: '^#?(PrintLastLog)'
+    line: '\1 yes'
+  - regexp: '^#?(PrintMotd)'
+    line: '\1 yes'
+  - regexp: '^#?(UsePAM)'
+    line: '\1 no'

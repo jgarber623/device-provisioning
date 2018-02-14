@@ -1,7 +1,7 @@
 - name: Add blocklist URLs
   lineinfile:
     path: /etc/pihole/adlists.list
-    line: '{{ item.url }}'
+    line: "{{ item.url }}"
   with_items: "{{ blocklists }}"
   become: yes
 
@@ -9,7 +9,7 @@
   lineinfile:
     path: /etc/pihole/adlists.list
     insertbefore: '^{{ item.url }}'
-    line: '{{ item.comment }}'
+    line: "{{ item.comment }}"
   with_items: "{{ blocklists }}"
   become: yes
 
