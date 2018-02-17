@@ -2,23 +2,11 @@
   import_role:
     name: common
 
-- name: Disable services
-  service:
-    name: "{{ item }}"
-    enabled: no
-    state: stopped
-  with_items: "{{ services_to_disable }}"
-  become: yes
-  notify:
-    - reboot
-
-- name: Update SSH config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '{{ item.regexp }}'
-    line: '{{ item.line }}'
-    backrefs: yes
-  with_items: "{{ sshd_config }}"
+- name: Copy configuration files
+  copy:
+    dest: "{{ item.dest }}"
+    src: "{{ item.src }}"
+  with_items: "{{ files_to_copy }}"
   become: yes
   notify:
     - restart ssh

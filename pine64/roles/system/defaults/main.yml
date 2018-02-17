@@ -1,26 +1,12 @@
 dependencies:
   - bluetooth
   - cron-apt
-  - firmware-realtek
   - hfsplus
   - hfsprogs
   - hfsutils
-  - less
-  - libpam-systemd
   - nmap
+  - tmux
 
-services_to_disable:
-  - avahi-daemon
-  - avahi-daemon.socket
-
-sshd_config:
-  - regexp: '^#?(PasswordAuthentication)'
-    line: '\1 no'
-  - regexp: '^#?(PermitRootLogin)'
-    line: '\1 no'
-  - regexp: '^#?(PrintLastLog)'
-    line: '\1 yes'
-  - regexp: '^#?(PrintMotd)'
-    line: '\1 yes'
-  - regexp: '^#?(UsePAM)'
-    line: '\1 no'
+files_to_copy:
+  - dest: /etc/ssh/sshd_config
+    src: files/sshd_config

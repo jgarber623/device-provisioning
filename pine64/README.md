@@ -4,7 +4,7 @@ This playbook will provision a [Pine64](https://www.pine64.org) for use as a hea
 
 ### Table of Contents
 
-- [Provisioning CHIP](#provisioning-pine64)
+- [Provisioning Pine64](#provisioning-pine64)
 	- [Flash SD Card](#flash-sd-card)
 	- [Configure SSH](#configure-ssh)
 	- [Upgrade to Debian 10 (Buster)](#upgrade-to-debian-10--buster-)
@@ -17,7 +17,7 @@ This playbook will provision a [Pine64](https://www.pine64.org) for use as a hea
 
 ### Flash SD Card
 
-Download the latest Debian minimal release from [ayufan’s linux-build repository](https://github.com/ayufan-pine64/linux-build) and flash the image to an SD Card using Etcher. Insert the SD Card into the Pine64, connect an Ethernet cable, and power things up!
+Download the latest "minimal" Debian release from [ayufan’s linux-build repository](https://github.com/ayufan-pine64/linux-build) and flash the image to an SD Card using Etcher. Insert the SD Card into the Pine64, connect an Ethernet cable, and power things up!
 
 ### Configure SSH
 
@@ -37,29 +37,48 @@ Double check that you can SSH to the Pine64 without requiring a password.
 
 ### Upgrade to Debian 10 (Buster)
 
-SSH to the Pine64 and prepare for the upgrade by doing:
+SSH to the Pine64 and prepare for the upgrade by running:
 
 ```sh
 sudo apt update
-sudo apt install locales tmux
+sudo apt install python tmux
 
 sudo dpkg-reconfigure locales
+sudo dpkg-reconfigure tzdata
 ```
 
-Edit `/etc/apt/sources.list`:
+Update `/etc/apt/sources.list`:
 
-```text
+```sh
+sudo tee /etc/apt/sources.list << EOF
 deb http://deb.debian.org/debian buster main contrib non-free
 deb-src http://deb.debian.org/debian buster main contrib non-free
 
 deb http://deb.debian.org/debian buster-updates main contrib non-free
 deb-src http://deb.debian.org/debian buster-updates main contrib non-free
 
-deb http://deb.debian.org/debian stretch-backports main contrib non-free
-deb-src http://deb.debian.org/debian stretch-backports main contrib non-free
-
 deb http://security.debian.org/debian-security/ buster/updates main contrib non-free
 deb-src http://security.debian.org/debian-security/ buster/updates main contrib non-free
+EOF
+```
+
+Optionally, create/update files in `/etc/apt/sources.list.d/`:
+
+```sh
+sudo tee /etc/apt/sources.list.d/longsleep-ubuntu-pine64-flavour-makers.list << EOF
+deb http://ppa.launchpad.net/longsleep/ubuntu-pine64-flavour-makers/ubuntu xenial main
+deb-src http://ppa.launchpad.net/longsleep/ubuntu-pine64-flavour-makers/ubuntu xenial main
+EOF
+
+sudo tee /etc/apt/sources.list.d/ayufan-pine64-ppa.list << EOF
+deb http://ppa.launchpad.net/ayufan/pine64-ppa/ubuntu xenial main
+deb-src http://ppa.launchpad.net/ayufan/pine64-ppa/ubuntu xenial main
+EOF
+
+sudo tee /etc/apt/sources.list.d/ayufan-pine64.list << EOF
+deb http://deb.ayufan.eu/orgs/ayufan-pine64/releases /
+deb http://deb.ayufan.eu/orgs/ayufan-pine64/pre-releases /
+EOF
 ```
 
 Start a tmux session (with `tmux`) and run the following commands to upgrade Debian:
@@ -74,13 +93,6 @@ Restart the Pine64 with `sudo shutdown -r now`.
 After the restart, make sure everything's starting up properly. You might also want to run `sudo apt autoremove` to clean up outdated packages.
 
 ### Provision with Ansible
-
-Before running the Ansible playbooks, SSH to the Pine64 and install Python:
-
-```sh
-sudo apt update
-sudo apt install python
-```
 
 Run the main Ansible playbook to provision the Pine64:
 
@@ -104,13 +116,17 @@ sudo bluetoothctl
 [bluetooth] power on
 [bluetooth] agent on
 [bluetooth] default-agent
+[bluetooth] pairable on
+[bluetooth] discoverable on
 [bluetooth] scan on
 ```
 
-You should now see a list of devices with their device addresses. To pair with a particular device, run:
+You should now see a list of devices with their device addresses. To pair with, connect to, or trust a particular device, run:
 
 ```sh
 [bluetooth] pair <bluetooth-device-address>
+[bluetooth] connect <bluetooth-device-address>
+[bluetooth] trust <bluetooth-device-address>
 ```
 
 ### Installing and Configuring Pi-hole

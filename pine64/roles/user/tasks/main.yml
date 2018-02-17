@@ -20,12 +20,13 @@
 
 - name: Copy configuration files
   copy:
-    src: files/{{ item }}
     dest: "{{ ansible_user_dir }}/{{ item }}"
+    src: files/{{ item }}
   with_items: "{{ files_to_copy }}"
 
-- name: Remove Bash files
+- name: Remove files
   file:
-    path: "{{ ansible_user_dir }}/{{ item }}"
+    path: "{{ item }}"
     state: absent
   with_items: "{{ files_to_remove }}"
+  become: yes
