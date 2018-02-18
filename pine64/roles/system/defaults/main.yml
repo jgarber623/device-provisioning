@@ -10,8 +10,8 @@ dependencies:
   - tmux
 
 files_to_copy:
-  - dest: /etc/ssh/sshd_config
-    src: files/sshd_config
+  - src: files/sshd_config
+    dest: /etc/ssh/sshd_config
 
 files_to_modify:
   - path: /etc/update-motd.d/10-uname

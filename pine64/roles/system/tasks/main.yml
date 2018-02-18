@@ -4,8 +4,8 @@
 
 - name: Copy configuration files
   copy:
-    dest: "{{ item.dest }}"
     src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
   with_items: "{{ files_to_copy }}"
   become: yes
   notify:
