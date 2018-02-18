@@ -1,0 +1,23 @@
+dependencies:
+  - nginx-extras
+
+nginx:
+  config_path: /etc/nginx
+  sites_path: /var/www
+
+files_to_copy:
+  - src: files/default/
+    dest: "{{ nginx.sites_path }}/default"
+  - src: files/mime.types
+    dest: "{{ nginx.config_path }}/mime.types"
+  - src: files/nginx.conf
+    dest: "{{ nginx.config_path }}/nginx.conf"
+  - src: files/sites-available/
+    dest: "{{ nginx.config_path }}/sites-available"
+
+files_to_remove:
+  - "{{ nginx.config_path }}/sites-available/default"
+  - "{{ nginx.sites_path }}/html"
+
+sites_to_enable:
+  - default
