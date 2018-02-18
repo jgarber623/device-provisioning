@@ -4,6 +4,8 @@ dependencies:
   - hfsplus
   - hfsprogs
   - hfsutils
+  - less
+  - libpam-systemd
   - nmap
   - tmux
 
