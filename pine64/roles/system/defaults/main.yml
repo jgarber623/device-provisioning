@@ -10,3 +10,12 @@ dependencies:
 files_to_copy:
   - dest: /etc/ssh/sshd_config
     src: files/sshd_config
+
+files_to_modify:
+  - path: /etc/update-motd.d/10-uname
+    mode: -x
+  - path: /etc/update-motd.d/11-pine-a64-help-text
+    mode: -x
+
+files_to_remove:
+  - /etc/motd

@@ -24,9 +24,9 @@
     src: files/{{ item }}
   with_items: "{{ files_to_copy }}"
 
-- name: Remove files
+- name: Remove configuration files
   file:
-    path: "{{ item }}"
+    path: "{{ ansible_user_dir }}/{{ item }}"
     state: absent
   with_items: "{{ files_to_remove }}"
   become: yes
