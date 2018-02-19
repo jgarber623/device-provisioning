@@ -1,0 +1,12 @@
+- name: Install packages
+  import_role:
+    name: common
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ files_to_copy }}"
+  become: yes
+  notify:
+    - restart dnsmasq

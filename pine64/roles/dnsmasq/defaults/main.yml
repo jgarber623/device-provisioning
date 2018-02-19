@@ -1,0 +1,6 @@
+dependencies:
+  - dnsmasq
+
+files_to_copy:
+  - src: files/00-home.conf
+    dest: /etc/dnsmasq.d/00-home.conf

@@ -1,0 +1,8 @@
+- name: "Pine64: dnsmasq Playbook"
+  hosts: pine64
+  remote_user: pine64
+  become_method: sudo
+  gather_facts: false
+
+  roles:
+    - dnsmasq
