@@ -8,6 +8,8 @@ nginx:
 files_to_copy:
   - src: files/default/
     dest: "{{ nginx.sites_path }}/default"
+  - src: files/extras.d/
+    dest: "{{ nginx.config_path }}/extras.d"
   - src: files/mime.types
     dest: "{{ nginx.config_path }}/mime.types"
   - src: files/nginx.conf
