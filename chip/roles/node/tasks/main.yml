@@ -18,3 +18,7 @@
   shell: "{{ ansible_env.SHELL }} -lc '. {{ nvm.path }}/nvm.sh && nvm install {{ node.version }}'"
   register: install_node_result
   changed_when: '"already installed." not in install_node_result.stderr'
+
+- name: Set default Node version to {{ node.version }}
+  shell: "{{ ansible_env.SHELL }} -lc '. {{ nvm.path }}/nvm.sh && nvm alias default {{ node.version }}'"
+  changed_when: false

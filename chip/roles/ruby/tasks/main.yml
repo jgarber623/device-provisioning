@@ -30,7 +30,7 @@
   register: install_ruby_result
   changed_when: install_ruby_result.stdout != ''
 
-- name: Set global Ruby version
+- name: Set global Ruby version to {{ ruby.version }}
   shell: "{{ ansible_env.SHELL }} -lc '{{ rbenv.path }}/bin/rbenv global {{ ruby.version }}'"
   changed_when: false
 
