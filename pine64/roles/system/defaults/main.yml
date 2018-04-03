@@ -10,6 +10,8 @@ dependencies:
   - tmux
 
 files_to_copy:
+  - src: files/99seccomp
+    dest: /etc/apt/apt.conf.d/99
   - src: files/sshd_config
     dest: /etc/ssh/sshd_config
 

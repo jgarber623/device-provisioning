@@ -1,0 +1,2 @@
+# https://github.com/meefik/linuxdeploy/issues/869
+apt::sandbox::seccomp "false";
