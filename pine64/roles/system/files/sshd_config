@@ -94,7 +94,6 @@ PrintMotd yes
 PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
-#UsePrivilegeSeparation sandbox
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0

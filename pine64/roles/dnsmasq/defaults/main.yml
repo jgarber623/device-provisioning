@@ -4,3 +4,7 @@ dependencies:
 files_to_copy:
   - src: files/00-home.conf
     dest: /etc/dnsmasq.d/00-home.conf
+
+dnsmasq_config:
+  - regexp: '^#?(conf-dir=/etc/dnsmasq.d)'
+    line: '\1'
