@@ -1,0 +1,15 @@
+- name: Create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+  with_items: "{{ fstab__mount_points }}"
+  become: yes
+
+- name: Mount USB Drives
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: force,rw,user,auto
+    state: mounted
+  with_items: "{{ fstab__mount_points }}"

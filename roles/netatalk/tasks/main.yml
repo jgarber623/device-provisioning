@@ -1,0 +1,59 @@
+- name: Get Netatalk binary path
+  command: which netatalk
+  register: netatalk__bin_path
+
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ netatalk__packages }}"
+  become: yes
+  when: netatalk__bin_path == ""
+
+- name: Download and extract Netatalk {{ netatalk__version }} source
+  unarchive:
+    src: http://prdownloads.sourceforge.net/netatalk/netatalk-{{ netatalk__version }}.tar.bz2
+    dest: "{{ netatalk__workspace }}"
+    remote_src: yes
+  when: netatalk__bin_path == ""
+
+- name: Configure and make Netatalk {{ netatalk__version }}
+  command: >
+    ./configure --with-init-style=debian-systemd --without-libevent --without-tdb --with-cracklib --enable-krbV-uam --with-pam-confdir=/etc/pam.d --with-dbus-daemon=/usr/bin/dbus-daemon --with-dbus-sysconf-dir=/etc/dbus-1/system.d --with-tracker-pkgconfig-version=1.0
+    make
+  args:
+    chdir: "{{ netatalk__workspace }}"
+  when: netatalk__bin_path == ""
+
+- name: Install Netatalk {{ netatalk__version }}
+  command: make install
+  args:
+    chdir: "{{ netatalk__workspace }}"
+  become: yes
+  when: netatalk__bin_path == ""
+
+- name: Clean up source files
+  file:
+    path: "{{ netatalk__workspace }}/netatalk-{{ netatalk__version }}"
+    state: absent
+
+- name: Update /etc/nsswitch.conf hosts configuration
+  lineinfile:
+    path: /etc/nsswitch.conf
+    regexp: '^(hosts:.* dns)$'
+    line: '\1 mdns4 mdns'
+    backrefs: yes
+  become: yes
+  notify: Restart Netatalk services
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0664
+  with_items: "{{ netatalk__configuration_files }}"
+  become: yes
+  notify: Restart Netatalk services

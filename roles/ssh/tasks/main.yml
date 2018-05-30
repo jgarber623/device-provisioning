@@ -1,0 +1,23 @@
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ ssh__packages }}"
+  become: yes
+
+- name: Update sshd_config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+  with_items: "{{ ssh__sshd_config }}"
+  become: yes
+  notify: Test sshd_config and restart
+
+- name: Configure authorized_keys for user
+  authorized_key:
+    user: "{{ ansible_user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_items: "{{ ssh__authorized_keys }}"

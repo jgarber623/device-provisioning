@@ -1,0 +1,34 @@
+netatalk__packages:
+  - avahi-daemon
+  - build-essential
+  - libacl1-dev
+  - libavahi-client-dev
+  - libcrack2-dev
+  - libdb-dev
+  - libdbus-1-dev
+  - libdbus-glib-1-dev
+  - libevent-dev
+  - libgcrypt-dev
+  - libglib2.0-dev
+  - libio-socket-inet6-perl
+  - libkrb5-dev
+  - libldap2-dev
+  - libmariadbclient-dev
+  - libpam0g-dev
+  - libssl-dev
+  - libtdb-dev
+  - libtracker-miner-1.0-dev
+  - libtracker-sparql-1.0-dev
+  - libwrap0-dev
+  - systemtap-sdt-dev
+  - tracker
+
+netatalk__configuration_files:
+  - src: files/afpd.service
+    dest: /etc/avahi/services/afpd.service
+  - src: files/afp.conf
+    dest: /usr/local/etc/afp.conf
+
+netatalk__version: 3.1.11
+
+netatalk__workspace: "{{ ansible_env.HOME }}"

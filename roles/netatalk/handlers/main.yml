@@ -1,0 +1,13 @@
+- name: Restart avahi-daemon
+  service:
+    name: avahi-daemon
+    enabled: yes
+    state: restarted
+  listen: Restart Netatalk services
+
+- name: Restart netatalk
+  service:
+    name: netatalk
+    enabled: yes
+    state: restarted
+  listen: Restart Netatalk services

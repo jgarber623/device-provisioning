@@ -1,0 +1,4 @@
+hfsplus__packages:
+  - hfsplus
+  - hfsprogs
+  - hfsutils

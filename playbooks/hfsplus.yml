@@ -1,0 +1,6 @@
+- name: HFS+ Playbook
+  hosts: raspberrypi
+  become_method: sudo
+  gather_facts: false
+  roles:
+    - ../roles/hfsplus

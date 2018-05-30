@@ -1,0 +1,10 @@
+- name: "Raspberry Pi: Time Machine Playbook"
+  hosts: raspberrypi
+  remote_user: pi
+  become_method: sudo
+  gather_facts: false
+
+- import_playbook: playbooks/ssh.yml
+- import_playbook: playbooks/hfsplus.yml
+- import_playbook: playbooks/fstab.yml
+- import_playbook: playbooks/netatalk.yml
