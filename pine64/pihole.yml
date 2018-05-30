@@ -1,8 +1,0 @@
-- name: "Pine64: Pi-hole Playbook"
-  hosts: pine64
-  remote_user: pine64
-  become_method: sudo
-  gather_facts: false
-
-  roles:
-    - pihole

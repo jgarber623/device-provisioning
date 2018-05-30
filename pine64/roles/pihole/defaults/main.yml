@@ -1,6 +1,0 @@
-dependencies:
-  - psmisc
-
-blocklists:
-  - url: https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/nocoin.txt
-    comment: ##NoCoin Filter List

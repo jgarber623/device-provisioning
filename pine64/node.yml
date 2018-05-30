@@ -1,7 +1,0 @@
-- name: "Pine64: Node Playbook"
-  hosts: pine64
-  remote_user: pine64
-  become_method: sudo
-
-  roles:
-    - node

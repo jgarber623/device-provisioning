@@ -1,8 +1,0 @@
-- name: Install dependencies
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
-  with_items: "{{ dependencies }}"
-  become: yes

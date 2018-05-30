@@ -1,7 +1,0 @@
-- name: "CHIP: User Playbook"
-  hosts: chip
-  remote_user: chip
-  become_method: sudo
-
-  roles:
-    - user

@@ -1,8 +1,0 @@
-- name: "CHIP: PostgreSQL Playbook"
-  hosts: chip
-  remote_user: chip
-  become_method: sudo
-  gather_facts: false
-
-  roles:
-    - postgresql
