@@ -1,5 +1,6 @@
 - name: Get Netatalk binary path
-  command: which netatalk
+  stat:
+    path: /usr/local/sbin/netatalk
   register: netatalk__bin_path
 
 - name: Install packages
@@ -7,45 +8,38 @@
     name: "{{ item }}"
     state: latest
     update_cache: yes
-  with_items: "{{ netatalk__packages }}"
+  with_items: "{{ netatalk__apt_packages }}"
   become: yes
-  when: netatalk__bin_path == ""
 
-- name: Download and extract Netatalk {{ netatalk__version }} source
-  unarchive:
-    src: http://prdownloads.sourceforge.net/netatalk/netatalk-{{ netatalk__version }}.tar.bz2
-    dest: "{{ netatalk__workspace }}"
-    remote_src: yes
-  when: netatalk__bin_path == ""
+- name: Download, configure, build, and install Netatalk {{ netatalk__version }}
+  block:
+    - unarchive:
+        src: http://prdownloads.sourceforge.net/netatalk/netatalk-{{ netatalk__version }}.tar.bz2
+        dest: "{{ ansible_env.HOME }}"
+        remote_src: yes
+    - command: ./configure --with-init-style=debian-systemd --without-libevent --without-tdb --with-cracklib --enable-krbV-uam --with-pam-confdir=/etc/pam.d --with-dbus-daemon=/usr/bin/dbus-daemon --with-dbus-sysconf-dir=/etc/dbus-1/system.d --with-tracker-pkgconfig-version=1.0
+      args:
+        chdir: "{{ netatalk__workspace }}"
+    - command: make
+      args:
+        chdir: "{{ netatalk__workspace }}"
+    - command: make install
+      args:
+        chdir: "{{ netatalk__workspace }}"
+      become: yes
+    - file:
+        path: "{{ netatalk__workspace }}"
+        state: absent
+  when: not netatalk__bin_path.stat.exists
 
-- name: Configure and make Netatalk {{ netatalk__version }}
-  command: >
-    ./configure --with-init-style=debian-systemd --without-libevent --without-tdb --with-cracklib --enable-krbV-uam --with-pam-confdir=/etc/pam.d --with-dbus-daemon=/usr/bin/dbus-daemon --with-dbus-sysconf-dir=/etc/dbus-1/system.d --with-tracker-pkgconfig-version=1.0
-    make
-  args:
-    chdir: "{{ netatalk__workspace }}"
-  when: netatalk__bin_path == ""
-
-- name: Install Netatalk {{ netatalk__version }}
-  command: make install
-  args:
-    chdir: "{{ netatalk__workspace }}"
-  become: yes
-  when: netatalk__bin_path == ""
-
-- name: Clean up source files
-  file:
-    path: "{{ netatalk__workspace }}/netatalk-{{ netatalk__version }}"
-    state: absent
-
-- name: Update /etc/nsswitch.conf hosts configuration
+- name: Update {{ netatalk__nsswitch_config_path }} configuration
   lineinfile:
-    path: /etc/nsswitch.conf
-    regexp: '^(hosts:.* dns)$'
-    line: '\1 mdns4 mdns'
+    path: "{{ netatalk__nsswitch_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
     backrefs: yes
+  with_items: "{{ netatalk__nsswitch_config_lines }}"
   become: yes
-  notify: Restart Netatalk services
 
 - name: Copy configuration files
   copy:
@@ -54,6 +48,13 @@
     owner: root
     group: root
     mode: 0664
-  with_items: "{{ netatalk__configuration_files }}"
+  with_items: "{{ netatalk__config_files }}"
   become: yes
-  notify: Restart Netatalk services
+
+- name: Restart services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+  with_items: "{{ netatalk__services }}"
+  become: yes

@@ -1,0 +1,16 @@
+- name: Update /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^(127\.0\.0\.1.*)raspberrypi$'
+    line: '\1{{ hostname__hostname }}'
+    backrefs: yes
+  become: yes
+  notify: Reboot system
+
+- name: Update /etc/hostname
+  lineinfile:
+    path: /etc/hostname
+    regexp: '^raspberrypi$'
+    line: "{{ hostname__hostname }}"
+  become: yes
+  notify: Reboot system

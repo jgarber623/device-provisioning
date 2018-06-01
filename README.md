@@ -1,8 +1,8 @@
 # Raspberry Pi: Time Machine
 
-These playbooks will provision a [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) for use as a [Time Machine](https://www.apple.com/in/support/timemachine/) backup server.
+These playbooks will provision a [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) for use as a macOS Time Machine backup server.
 
-## Before You Get Started…
+## Getting Started
 
 First, check out this repository and branch:
 
@@ -14,58 +14,81 @@ _Great start!_ 👏🏻
 
 Before going much further, there are a few things worth looking at:
 
-1. Look through the various `defaults/main.yml` files in the `roles` folder.
-1. Update the necessary defaults to best match your setup (e.g. the `fstab__mount_points` list in `roles/fstab/defaults/main.yml`)
-1. Consider configuring your network to assign a static IP address to your Raspberry Pi based on its MAC address. This will make life a bit more predictable (and will give you an IP address to add to the `inventory` file).
+1. Look through the `vars/main.yml` files in the `roles` folder.
+1. Update defaults to best match your setup (e.g. `fstab__mount_points` in `roles/fstab/vars/main.yml`).
+1. Configure your network to assign a static IP address to your Raspberry Pi based on its MAC address. This will make life a bit more predictable (and will give you consistent IP address to use in the `inventory` file).
 
-## Prepare USB Hard Drive(s)
+## Preparing the Hardware
+
+### Configure macOS
+
+First, enable "unsupported" network volume support in Time Machine:
+
+```sh
+defaults write com.apple.systempreferences TMShowUnsupportedNetworkVolumes 1
+```
+
+Next, install provisioning depencies by running `make boostrap` from the root of this project. This will install the [Ansible](https://www.ansible.com) command line utilities.
+
+### Prepare USB Hard Drive(s)
 
 For each hard drive you wish to use as a networked Time Machine volume, connect the drive to a macOS computer, launch Disk Utility, and erase the drive using the "Mac OS Extended (Journaled)" format.
 
-Next, in a new Finder window, click on the newly-formatted volume in the sidebar and choose "File > Get Info" (`cmd + i`). At the bottom of the Get Info window, under "Sharing & Permissions," change all options to "Read & Write" and make sure that "Ignore ownership on this volume" is selected.
+Next, in a new Finder window, click on the newly-formatted volume in the sidebar and choose "File > Get Info" (`⌘I`). At the bottom of the Get Info window, under "Sharing & Permissions," change all options to "Read & Write" and make sure that "Ignore ownership on this volume" is selected.
 
-## Prepare the Raspberry Pi
+### Prepare the Raspberry Pi
 
 1. Download the latest version of [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/) from the Raspberry Pi website.
 1. Using a tool like [Etcher](https://etcher.io), write the downloaded `.img` file to an available SD card.
 1. Before removing the SD card, add an empty file to [enable SSH on the Raspberry Pi](https://www.raspberrypi.org/documentation/remote-access/ssh/) at boot: `touch /Volumes/boot/ssh`
 1. Optionally, configure the Raspberry Pi's GPU settings by appending `gpu_mem=16` to `/Volumes/boot/config.txt`. _(This allocates the minimum allowable memory to the Raspberry Pi's GPU which **should** be okay for a headless server.)_
-1. Insert the SD card into the Raspberry Pi, connect your prepared USB hard drives to the Raspberry Pi, connect everything to power, and wait for the Raspberry Pi to come online.
 
-At this point, you should be able to successfully SSH to the Raspberry Pi using a command like:
+Insert the SD card into the Raspberry Pi, connect your prepared USB hard drives to the Raspberry Pi, connect everything to power, and wait for the Raspberry Pi to come online.
+
+## Provisioning the Raspberry Pi
+
+### Configure SSH
+
+Create a new SSH key pair for the Raspberry Pi, using a memorable file name like `~/.ssh/id_rsa_raspberry-pi-time-machine`:
 
 ```sh
-ssh pi@10.0.0.20
+ssh-keygen -t rsa -b 4096 -C 'Raspberry Pi (Time Machine)'
 ```
 
-## Prepare macOS and Provision the Raspberry Pi
+Copy the newly-created SSH public key over to the Raspberry Pi using the Raspberry Pi's IP address on your network (`10.0.0.20` in this example):
 
-1. Create an SSH key pair for the Raspberry Pi and save it to `~/.ssh/id_rsa_raspberry-pi-time-machine`:
-	```sh
-	ssh-keygen -t rsa -b 4096 -C 'Raspberry Pi (Time Machine)'
-	```
-1. Update your SSH config file (`~/.ssh/config`):
-	```txt
-	Host RaspberryPiTimeMachine
-	  User pi
-	  HostName 10.0.0.20
-	  IdentityFile ~/.ssh/id_rsa_raspberry-pi-time-machine
-	```
-1. Run `make boostrap` from the root of this project to install [Ansible](https://www.ansible.com).
-1. Run `make provision` to provision the Raspberry Pi using the playbooks included in this repository.
+```sh
+ssh-copy-id -i ~/.ssh/id_rsa_raspberry-pi-time-machine.pub pi@10.0.0.20
+```
+
+Update your SSH config file (`~/.ssh/config`):
+
+```txt
+Host RaspberryPiTimeMachine
+  User pi
+  HostName 10.0.0.20
+  IdentityFile ~/.ssh/id_rsa_raspberry-pi-time-machine
+```
+
+You should now be able to connect to the Raspberry Pi without using a password:
+
+```sh
+ssh RaspberryPiTimeMachine
+```
+
+`exit` out of the SSH session and proceed to the next section!
+
+### Run Ansible Playbooks
+
+Run `make provision` to provision the Raspberry Pi using the playbooks included in this repository.
 
 ## Configure Time Machine on macOS
 
-1. Enable "unsupported" network volume support in Time Machine:
-	```sh
-	defaults write com.apple.systempreferences TMShowUnsupportedNetworkVolumes 1
-	```
-1. Connect to the networked Time Machine volume:
-	1. From Finder, choose "Go > Connect to Server…" (`cmd + k`).
-	1. Enter `afp://10.0.0.20` in the "Connect to Server" window. _(Note that your Raspberry Pi's IP address may be different.)_
-	1. When prompted, enter the username and password for the Raspberry Pi and choose the appropriate shared drive.
+With the Raspberry Pi provisioned, it's time to configure macOS to recognize the Pi and its connected drive(s):
+
 1. Launch System Preferences and open the Time Machine preference pane.
 1. Choose "Select Disk…" and select the networked Time Machine volume.
+1. When prompted, enter the username and password for the Raspberry Pi and choose the appropriate drive.
 
 Time Machine should soon begin the initial backup!
 

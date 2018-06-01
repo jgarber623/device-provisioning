@@ -1,14 +1,13 @@
-ssh__packages:
+ssh__apt_packages:
   - openssh-client
   - openssh-server
 
-ssh__authorized_keys:
-  - "{{ lookup('env', 'HOME') }}/.ssh/id_rsa_raspberry-pi-time-machine.pub"
+ssh__sshd_config_path: /etc/ssh/sshd_config
 
-ssh__sshd_config:
+ssh__sshd_config_lines:
   - key: PasswordAuthentication
-    value: no
+    value: "no"
   - key: PermitRootLogin
-    value: no
+    value: "no"
   - key: UsePAM
-    value: no
+    value: "no"

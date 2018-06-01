@@ -1,5 +1,6 @@
 - name: Test sshd_config and restart
   command: sshd -t
+  become: yes
   notify: Restart ssh
 
 - name: Restart ssh

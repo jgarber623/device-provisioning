@@ -3,5 +3,5 @@
     name: "{{ item }}"
     state: latest
     update_cache: yes
-  with_items: "{{ hfsplus__packages }}"
+  with_items: "{{ hfsplus__apt_packages }}"
   become: yes

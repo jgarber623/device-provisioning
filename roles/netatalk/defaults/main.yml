@@ -1,4 +1,4 @@
-netatalk__packages:
+netatalk__apt_packages:
   - avahi-daemon
   - build-essential
   - libacl1-dev
@@ -23,12 +23,22 @@ netatalk__packages:
   - systemtap-sdt-dev
   - tracker
 
-netatalk__configuration_files:
+netatalk__config_files:
   - src: files/afpd.service
     dest: /etc/avahi/services/afpd.service
   - src: files/afp.conf
     dest: /usr/local/etc/afp.conf
 
+netatalk__services:
+  - avahi-daemon
+  - netatalk
+
 netatalk__version: 3.1.11
 
-netatalk__workspace: "{{ ansible_env.HOME }}"
+netatalk__workspace: "{{ ansible_env.HOME }}/netatalk-{{ netatalk__version }}"
+
+netatalk__nsswitch_config_path: /etc/nsswitch.conf
+
+netatalk__nsswitch_config_lines:
+  - regexp: '^(hosts:.* dns)$'
+    line: '\1 mdns4 mdns'

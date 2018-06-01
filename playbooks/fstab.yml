@@ -1,6 +1,7 @@
-- name: fstab Playbook
+- name: "Raspberry Pi: Time Machine fstab Playbook"
   hosts: raspberrypi
   become_method: sudo
   gather_facts: false
+
   roles:
     - ../roles/fstab
