@@ -1,0 +1,7 @@
+- name: Install packages with apt
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: "{{ packages }}"
+  become: yes

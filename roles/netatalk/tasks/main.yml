@@ -3,13 +3,9 @@
     path: /usr/local/sbin/netatalk
   register: netatalk__bin_path
 
-- name: Install packages
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items: "{{ netatalk__apt_packages }}"
-  become: yes
+- import_tasks: ../common/tasks/apt.yml
+  vars:
+    packages: "{{ netatalk__apt_packages }}"
 
 - name: Download, configure, build, and install Netatalk {{ netatalk__version }}
   block:

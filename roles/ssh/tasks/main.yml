@@ -1,10 +1,6 @@
-- name: Install packages
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items: "{{ ssh__apt_packages }}"
-  become: yes
+- import_tasks: ../common/tasks/apt.yml
+  vars:
+    packages: "{{ ssh__apt_packages }}"
 
 - name: Update {{ ssh__sshd_config_path }}
   lineinfile:
