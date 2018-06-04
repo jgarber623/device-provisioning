@@ -1,6 +1,5 @@
 - name: "Raspberry Pi: Time Machine HFS+ Playbook"
   hosts: raspberrypi
-  become_method: sudo
   gather_facts: false
 
   roles:
