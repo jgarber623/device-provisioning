@@ -10,7 +10,7 @@
 - name: Update /etc/hostname
   lineinfile:
     path: /etc/hostname
-    regexp: '^raspberrypi$'
+    regexp: '^.*$'
     line: "{{ hostname__hostname }}"
   become: yes
   notify: Reboot system
