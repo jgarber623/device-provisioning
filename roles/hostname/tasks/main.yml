@@ -1,7 +1,7 @@
 - name: Update /etc/hosts
   lineinfile:
     path: /etc/hosts
-    regexp: '^(127\.0\.0\.1.*)raspberrypi$'
+    regexp: '^(127\.0\.1\.1.*)raspberrypi$'
     line: '\1{{ hostname__hostname }}'
     backrefs: yes
   become: yes
