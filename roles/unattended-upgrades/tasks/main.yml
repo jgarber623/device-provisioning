@@ -1,0 +1,3 @@
+- import_tasks: ../common/tasks/apt.yml
+  vars:
+    packages: "{{ unattended_upgrades__apt_packages }}"

@@ -5,5 +5,6 @@
 - import_playbook: playbooks/ssh.yml
 - import_playbook: playbooks/hfsplus.yml
 - import_playbook: playbooks/fstab.yml
+- import_playbook: playbooks/unattended-upgrades.yml
 - import_playbook: playbooks/netatalk.yml
 - import_playbook: playbooks/hostname.yml
