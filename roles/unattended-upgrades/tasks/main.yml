@@ -1,3 +1,13 @@
 - import_tasks: ../common/tasks/apt.yml
   vars:
     packages: "{{ unattended_upgrades__apt_packages }}"
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0664
+  with_items: "{{ unattended_upgrades__config_files }}"
+  become: yes

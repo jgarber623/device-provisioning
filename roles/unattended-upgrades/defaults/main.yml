@@ -1,3 +1,7 @@
 unattended_upgrades__apt_packages:
   - apt-listchanges
   - unattended-upgrades
+
+unattended_upgrades__config_files:
+  - src: files/50unattended-upgrades
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
