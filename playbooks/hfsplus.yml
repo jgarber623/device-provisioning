@@ -1,6 +1,0 @@
-- name: "Raspberry Pi: Time Machine HFS+ Playbook"
-  hosts: raspberrypi
-  gather_facts: false
-
-  roles:
-    - ../roles/hfsplus

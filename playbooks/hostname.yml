@@ -1,4 +1,4 @@
-- name: "Raspberry Pi: Time Machine hostname Playbook"
+- name: "Raspberry Pi: AirPlay hostname Playbook"
   hosts: raspberrypi
   gather_facts: false
 

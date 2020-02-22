@@ -1,4 +1,4 @@
-- name: "Raspberry Pi: Time Machine SSH Playbook"
+- name: "Raspberry Pi: AirPlay SSH Playbook"
   hosts: raspberrypi
   gather_facts: true
 

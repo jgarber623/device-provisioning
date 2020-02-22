@@ -1,0 +1,20 @@
+shairport_sync__apt_packages:
+  - autoconf
+  - automake
+  - avahi-daemon
+  - build-essential
+  - git
+  - libasound2-dev
+  - libavahi-client-dev
+  - libconfig-dev
+  - libpopt-dev
+  - libsoxr-dev
+  - libssl-dev
+  - libtool
+  - xmltoman
+
+shairport_sync__workspace: "{{ ansible_env.HOME }}/shairport-sync"
+
+shairport_sync__config_files:
+  - src: files/shairport-sync.conf
+    dest: /etc/shairport-sync.conf

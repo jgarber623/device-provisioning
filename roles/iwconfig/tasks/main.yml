@@ -1,0 +1,4 @@
+- name: Turn off WiFi Power Management
+  command: iwconfig wlan0 power off
+  become: yes
+  changed_when: false

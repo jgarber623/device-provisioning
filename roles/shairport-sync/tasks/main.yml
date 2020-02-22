@@ -1,0 +1,52 @@
+- name: Get shairport-sync bin path
+  stat:
+    path: /usr/local/bin/shairport-sync
+  register: shairport_sync__bin_path
+
+- import_tasks: ../common/tasks/apt.yml
+  vars:
+    packages: "{{ shairport_sync__apt_packages }}"
+
+- name: Clone shairport-sync repository
+  git:
+    repo: https://github.com/mikebrady/shairport-sync
+    dest: "{{ shairport_sync__workspace }}"
+    version: "{{ shairport_sync__version }}"
+    accept_hostkey: yes
+
+- name: Configure and install shairport-sync
+  block:
+    - command:
+        argv:
+          - autoreconf -fi
+          - ./configure --sysconfdir=/etc --with-alsa --with-avahi --with-soxr --with-ssl=openssl --with-systemd
+        chdir: "{{ shairport_sync__workspace }}"
+    - make:
+        chdir: "{{ shairport_sync__workspace }}"
+    - make:
+        chdir: "{{ shairport_sync__workspace }}"
+        target: install
+      become: yes
+  when: not shairport_sync__bin_path.stat.exists
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0664
+  with_items: "{{ shairport_sync__config_files }}"
+  become: yes
+
+- name: Enable and start shairport-sync service
+  systemd:
+    name: shairport-sync
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Clean up workspace
+  file:
+    path: "{{ shairport_sync__workspace }}"
+    state: absent

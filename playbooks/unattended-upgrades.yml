@@ -1,4 +1,4 @@
-- name: "Raspberry Pi: Time Machine unattended-upgrades Playbook"
+- name: "Raspberry Pi: AirPlay unattended-upgrades Playbook"
   hosts: raspberrypi
   gather_facts: false
 

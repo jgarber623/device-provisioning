@@ -1,0 +1,6 @@
+- name: "Raspberry Pi: AirPlay shairport-sync Playbook"
+  hosts: raspberrypi
+  gather_facts: true
+
+  roles:
+    - ../roles/shairport-sync

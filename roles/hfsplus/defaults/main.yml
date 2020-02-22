@@ -1,4 +1,0 @@
-hfsplus__apt_packages:
-  - hfsplus
-  - hfsprogs
-  - hfsutils

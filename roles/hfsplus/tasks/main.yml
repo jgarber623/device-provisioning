@@ -1,3 +1,0 @@
-- import_tasks: ../common/tasks/apt.yml
-  vars:
-    packages: "{{ hfsplus__apt_packages }}"

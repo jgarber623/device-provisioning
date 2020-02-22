@@ -1,0 +1,6 @@
+- name: "Raspberry Pi: AirPlay iwconfig Playbook"
+  hosts: raspberrypi
+  gather_facts: true
+
+  roles:
+    - ../roles/iwconfig

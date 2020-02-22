@@ -1,7 +1,0 @@
-fstab__mount_points:
-  - path: /media/time_machine_jason
-    src: /dev/sda2
-    fstype: hfsplus
-  - path: /media/time_machine_samara
-    src: /dev/sdb2
-    fstype: hfsplus
