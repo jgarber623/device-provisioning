@@ -1,11 +1,34 @@
-- name: Get shairport-sync bin path
-  stat:
-    path: /usr/local/bin/shairport-sync
-  register: shairport_sync__bin_path
-
 - import_tasks: ../common/tasks/apt.yml
   vars:
     packages: "{{ shairport_sync__apt_packages }}"
+
+- name: Clone alac repository
+  git:
+    repo: https://github.com/mikebrady/alac
+    dest: "{{ shairport_sync__alac_workspace }}"
+    version: "{{ shairport_sync__alac_version }}"
+    accept_hostkey: yes
+
+- block:
+    - command: autoreconf -fi
+      args:
+        chdir: "{{ shairport_sync__alac_workspace }}"
+    - name: Configure alac
+      command: ./configure
+      args:
+        chdir: "{{ shairport_sync__alac_workspace }}"
+    - name: Build alac
+      make:
+        chdir: "{{ shairport_sync__alac_workspace }}"
+    - name: Install alac
+      make:
+        chdir: "{{ shairport_sync__alac_workspace }}"
+        target: install
+      become: yes
+    - command: ldconfig
+      args:
+        chdir: "{{ shairport_sync__alac_workspace }}"
+      become: yes
 
 - name: Clone shairport-sync repository
   git:
@@ -14,29 +37,30 @@
     version: "{{ shairport_sync__version }}"
     accept_hostkey: yes
 
-- name: Configure and install shairport-sync
-  block:
-    - command:
-        argv:
-          - autoreconf -fi
-          - ./configure --sysconfdir=/etc --with-alsa --with-avahi --with-soxr --with-ssl=openssl --with-systemd
+- block:
+    - command: autoreconf -fi
+      args:
         chdir: "{{ shairport_sync__workspace }}"
-    - make:
+    - name: Configure shairport-sync
+      command: ./configure --sysconfdir=/etc --with-apple-alac --with-alsa --with-avahi --with-metadata --with-soxr --with-ssl=openssl --with-systemd
+      args:
         chdir: "{{ shairport_sync__workspace }}"
-    - make:
+    - name: Build shairport-sync
+      make:
+        chdir: "{{ shairport_sync__workspace }}"
+    - name: Install shairport-sync
+      make:
         chdir: "{{ shairport_sync__workspace }}"
         target: install
       become: yes
-  when: not shairport_sync__bin_path.stat.exists
 
-- name: Copy configuration files
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+- name: Create configuration file
+  template:
+    src: shairport-sync.conf.j2
+    dest: /etc/shairport-sync.conf
     owner: root
     group: root
     mode: 0664
-  with_items: "{{ shairport_sync__config_files }}"
   become: yes
 
 - name: Enable and start shairport-sync service
@@ -45,8 +69,3 @@
     state: started
     enabled: yes
   become: yes
-
-- name: Clean up workspace
-  file:
-    path: "{{ shairport_sync__workspace }}"
-    state: absent

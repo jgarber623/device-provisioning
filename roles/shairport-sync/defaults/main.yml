@@ -13,8 +13,6 @@ shairport_sync__apt_packages:
   - libtool
   - xmltoman
 
-shairport_sync__workspace: "{{ ansible_env.HOME }}/shairport-sync"
+shairport_sync__workspace: "{{ ansible_env.HOME }}/workspace/shairport-sync"
 
-shairport_sync__config_files:
-  - src: files/shairport-sync.conf
-    dest: /etc/shairport-sync.conf
+shairport_sync__alac_workspace: "{{ ansible_env.HOME }}/workspace/alac"

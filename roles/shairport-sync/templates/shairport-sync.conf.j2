@@ -1,0 +1,15 @@
+general =
+{
+  name = "{{ shairport_sync__config.general.name }}";
+};
+
+alsa = {
+  output_device = "{{ shairport_sync__config.alsa.output_device }}";
+  mixer_control_name = "{{ shairport_sync__config.alsa.mixer_control_name }}";
+};
+
+metadata =
+{
+  enabled = "yes";
+  include_cover_art = "yes";
+};

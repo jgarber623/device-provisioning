@@ -1,1 +1,9 @@
 shairport_sync__version: 3.3.5
+shairport_sync__alac_version: 5d6d836ee5b025a5e538cfa62c88bc5bced506ed
+
+shairport_sync__config:
+  general:
+    name: "Marantz 2220B"
+  alsa:
+    output_device: "hw:0,0"
+    mixer_control_name: "PCM"
